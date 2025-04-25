@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Basic styling for the chat window */
-        #chat-window {
+        #chat-window-container {
             transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            width: 320px; /* Default width */
+            height: 480px; /* Default height */
         }
-        #chat-window.hidden {
+        #chat-window-container.hidden {
             transform: translateY(20px) scale(0.95);
             opacity: 0;
             pointer-events: none; /* Prevent interaction when hidden */
@@ -27,6 +29,18 @@
         }
         main {
             flex-grow: 1; /* Allows main content to fill available space */
+        }
+
+        /* Styling for the resizable handle */
+        #resize-handle {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.1);
+            cursor: se-resize;
+            border-top-left-radius: 5px;
         }
     </style>
 </head>
@@ -47,7 +61,7 @@
     <main class="container mx-auto p-6 flex-grow">
         <h2 class="text-3xl font-semibold mb-4">Welcome to Our Site!</h2>
         <p class="mb-4">
-            This is a sample page demonstrating how a chatbot can be integrated. Look for the chat icon in the bottom right corner.
+            This is a sample page demonstrating how a chatbot can be integrated. Look for the chat icon in the bottom right corner. You can also try resizing the chat window by dragging the bottom-right corner.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-lg shadow-md">
@@ -74,47 +88,57 @@
             <i class="fas fa-comment-dots fa-lg"></i>
             </button>
 
-        <div id="chat-window" class="hidden fixed bottom-[calc(4rem+1.25rem)] right-5 w-80 h-96 bg-white rounded-lg shadow-xl border border-gray-300 flex flex-col overflow-hidden">
-            <iframe src="https://www.chatbase.co/chatbot-iframe/iKCQZZyJH0tBXVNCu0I-R"
+        <div id="chat-window-container" class="hidden fixed bottom-[calc(4rem+1.25rem)] right-5 bg-white rounded-lg shadow-xl border border-gray-300 flex flex-col overflow-hidden">
+            <iframe id="chat-iframe" src="https://www.chatbase.co/chatbot-iframe/iKCQZZyJH0tBXVNCu0I-R"
                     width="100%"
                     height="100%"
                     frameborder="0"
                     style="border: none;">
             </iframe>
+            <div id="resize-handle"></div>
         </div>
     </div>
 
     <script>
-        // Get references to the button and the chat window
         const chatLauncher = document.getElementById('chat-launcher');
-        const chatWindow = document.getElementById('chat-window');
-        // The close button is no longer needed as the Chatbase iframe will handle its own UI.
-        // const closeChatButton = document.getElementById('close-chat');
+        const chatWindowContainer = document.getElementById('chat-window-container');
+        const resizeHandle = document.getElementById('resize-handle');
+        const chatIframe = document.getElementById('chat-iframe');
+        let isResizing = false;
+        let startX, startY, initialWidth, initialHeight;
 
-        // Function to toggle chat window visibility
         function toggleChatWindow() {
-            chatWindow.classList.toggle('hidden');
-            // Optional: Toggle launcher visibility or icon
-            // For example, hide launcher when chat is open
-            // chatLauncher.classList.toggle('hidden');
+            chatWindowContainer.classList.toggle('hidden');
         }
 
-        // Event listener for the launcher button
         chatLauncher.addEventListener('click', toggleChatWindow);
 
-        // The close button event listener is no longer needed.
-        // // Event listener for the close button inside the chat window
-        // closeChatButton.addEventListener('click', toggleChatWindow);
+        resizeHandle.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            initialWidth = chatWindowContainer.offsetWidth;
+            initialHeight = chatWindowContainer.offsetHeight;
+        });
 
-        // Optional: Close chat if user clicks outside the chat window
-        // document.addEventListener('click', function(event) {
-        //     const isClickInsideChat = chatWindow.contains(event.target);
-        //     const isClickOnLauncher = chatLauncher.contains(event.target);
-        //
-        //     if (!chatWindow.classList.contains('hidden') && !isClickInsideChat && !isClickOnLauncher) {
-        //         toggleChatWindow();
-        //     }
-        // });
+        document.addEventListener('mousemove', function(e) {
+            if (!isResizing) return;
+
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+
+            chatWindowContainer.style.width = (initialWidth + deltaX) + 'px';
+            chatWindowContainer.style.height = (initialHeight + deltaY) + 'px';
+            // Optionally, you could also adjust the iframe's size, although setting it to 100% should handle it.
+            // chatIframe.style.width = '100%';
+            // chatIframe.style.height = '100%';
+
+            e.preventDefault(); // Prevent text selection during drag
+        });
+
+        document.addEventListener('mouseup', function() {
+            isResizing = false;
+        });
     </script>
 
 </body>
