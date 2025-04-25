@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website with Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Basic styling for the chat window */
+        #chat-window {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        #chat-window.hidden {
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            pointer-events: none; /* Prevent interaction when hidden */
+        }
+         /* Ensure body takes full height for footer positioning */
+        html, body {
+            height: 100%;
+            font-family: 'Inter', sans-serif; /* Default font */
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex-grow: 1; /* Allows main content to fill available space */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">My Website</h1>
+            <nav>
+                <a href="#" class="px-3 py-2 rounded hover:bg-blue-700">Home</a>
+                <a href="#" class="px-3 py-2 rounded hover:bg-blue-700">About</a>
+                <a href="#" class="px-3 py-2 rounded hover:bg-blue-700">Services</a>
+                <a href="#" class="px-3 py-2 rounded hover:bg-blue-700">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 flex-grow">
+        <h2 class="text-3xl font-semibold mb-4">Welcome to Our Site!</h2>
+        <p class="mb-4">
+            This is a sample page demonstrating how a chatbot can be integrated. Look for the chat icon in the bottom right corner.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Feature One</h3>
+                <p>Description of the first amazing feature we offer.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Feature Two</h3>
+                <p>Details about the second important feature available.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Feature Three</h3>
+                <p>Information regarding the third key feature provided.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-auto">
+        <p>&copy; 2025 My Website. All rights reserved.</p>
+    </footer>
+
+    <div class="fixed bottom-5 right-5 z-50">
+        <button id="chat-launcher" class="bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 ease-in-out">
+            <i class="fas fa-comment-dots fa-lg"></i>
+            </button>
+
+        <div id="chat-window" class="hidden fixed bottom-[calc(4rem+1.25rem)] right-5 w-80 h-96 bg-white rounded-lg shadow-xl border border-gray-300 flex flex-col overflow-hidden">
+            <div class="bg-blue-600 text-white p-3 flex justify-between items-center">
+                <h3 class="font-semibold">Chat with Us!</h3>
+                <button id="close-chat" class="text-white hover:text-gray-200">&times;</button>
+            </div>
+            <div class="flex-grow p-4 overflow-y-auto bg-gray-50">
+                <p class="text-sm text-gray-600">Welcome! How can we help you today?</p>
+                <div class="mt-4 p-2 bg-blue-100 text-blue-800 rounded-lg text-sm self-start max-w-[80%]">
+                    This is where the chat conversation would happen.
+                 </div>
+                 <div class="mt-2 p-2 bg-gray-200 text-gray-800 rounded-lg text-sm self-end text-right max-w-[80%] ml-auto">
+                    A user message might look like this.
+                 </div>
+            </div>
+            <div class="p-3 border-t border-gray-200">
+                <input type="text" placeholder="Type your message..." class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the button and the chat window
+        const chatLauncher = document.getElementById('chat-launcher');
+        const chatWindow = document.getElementById('chat-window');
+        const closeChatButton = document.getElementById('close-chat');
+
+        // Function to toggle chat window visibility
+        function toggleChatWindow() {
+            chatWindow.classList.toggle('hidden');
+             // Optional: Toggle launcher visibility or icon
+             // For example, hide launcher when chat is open
+             // chatLauncher.classList.toggle('hidden');
+        }
+
+        // Event listener for the launcher button
+        chatLauncher.addEventListener('click', toggleChatWindow);
+
+        // Event listener for the close button inside the chat window
+        closeChatButton.addEventListener('click', toggleChatWindow);
+
+        // Optional: Close chat if user clicks outside the chat window
+        // document.addEventListener('click', function(event) {
+        //     const isClickInsideChat = chatWindow.contains(event.target);
+        //     const isClickOnLauncher = chatLauncher.contains(event.target);
+        //
+        //     if (!chatWindow.classList.contains('hidden') && !isClickInsideChat && !isClickOnLauncher) {
+        //         toggleChatWindow();
+        //     }
+        // });
+    </script>
+
+</body>
+</html>
